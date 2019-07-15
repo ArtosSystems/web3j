@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.web3j.abi.EventEncoder;
@@ -129,24 +130,6 @@ public abstract class Contract extends ManagedTransaction {
 
     public void setGasProvider(ContractGasProvider gasProvider) {
         this.gasProvider = gasProvider;
-    }
-
-    /**
-     * Allow {@code gasPrice} to be set.
-     * @param newPrice gas price to use for subsequent transactions
-     * @deprecated use ContractGasProvider
-     */
-    public void setGasPrice(BigInteger newPrice) {
-        this.gasProvider = new StaticGasProvider(newPrice, gasProvider.getGasLimit());
-    }
-
-    /**
-     * Get the current {@code gasPrice} value this contract uses when executing transactions.
-     * @return the gas price set on this contract
-     * @deprecated use ContractGasProvider
-     */
-    public BigInteger getGasPrice() {
-        return gasProvider.getGasPrice();
     }
 
     /**
@@ -288,9 +271,12 @@ public abstract class Contract extends ManagedTransaction {
             String data, BigInteger weiValue, String funcName)
             throws TransactionException, IOException {
 
+        Supplier<Transaction> transaction = () ->
+                new Transaction(null, null, BigInteger.ONE, new BigInteger("7000000"), contractAddress, BigInteger.ZERO, data);
+
         TransactionReceipt receipt = send(contractAddress, data, weiValue,
-                gasProvider.getGasPrice(funcName),
-                gasProvider.getGasLimit(funcName));
+                gasProvider.getGasPrice(funcName, transaction),
+                gasProvider.getGasLimit(funcName, transaction));
 
         if (!receipt.isStatusOK()) {
             throw new TransactionException(

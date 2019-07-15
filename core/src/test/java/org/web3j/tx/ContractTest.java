@@ -343,14 +343,6 @@ public class ContractTest extends ManagedTransactionTester {
     }
 
     @Test
-    public void testSetGetGasPrice() {
-        assertEquals(ManagedTransaction.GAS_PRICE, contract.getGasPrice());
-        BigInteger newPrice = ManagedTransaction.GAS_PRICE.multiply(BigInteger.valueOf(2));
-        contract.setGasPrice(newPrice);
-        assertEquals(newPrice, contract.getGasPrice());
-    }
-
-    @Test
     public void testStaticGasProvider() throws IOException, TransactionException {
         StaticGasProvider gasProvider = new StaticGasProvider(BigInteger.TEN, BigInteger.ONE);
         TransactionManager txManager = mock(TransactionManager.class);
