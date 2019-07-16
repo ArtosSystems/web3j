@@ -242,10 +242,10 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
         publications = ['mavenJava']
         publish = true
         pkg {
-            repo = 'maven'
+            repo = 'Web3j'
             name = 'org.web3j'
             desc = project.description
-            userOrg = 'web3j'
+            userOrg = 'artossystems'
             licenses = ['Apache-2.0']
             issueTrackerUrl = 'https://github.com/web3j/web3j/issues'
             vcsUrl = 'https://github.com/web3j/web3j.git'
